@@ -13,7 +13,7 @@ import re
 class Myslf(Cog_Extention):
     
     @commands.command()
-    async def pttB(self,ctx,num:int):
+    async def pttB(self,ctx,num:int,wantNum:int):
         count = 0
         i = 0
         global url
@@ -32,26 +32,37 @@ class Myslf(Cog_Extention):
             root=bs4.BeautifulSoup(data,"html.parser") #讓BeautifulSoup協助我們解析HTML格式文件
             titles=root.find_all("a") 
             urltitles = root.find_all("div",class_="title")
-    
-            await ctx.send("第"+str(i+1)+"頁的內容:")
-
-            for urltitle in urltitles:
-                if count < 5:
-                    if urltitle.a != None:
-                        Link=urltitle.find("a")
-                        
-                        await ctx.send(str(count+1)+'.'+str(Link.string))
-                        await ctx.send('https://www.ptt.cc/'+Link['href'])
-                        await asyncio.sleep(0.1) #單位:秒 
-                        # webbrowser.open_new('https://www.ptt.cc/'+Link['href']) 
-                count = count + 1
             
-            await ctx.send("---------------------------------------------")
+            # matches = []
+            # atReg = re.compile(r'''(class="title">)
+            # <a href=.*?>(.*?)</a>')
+            # result = atReg.findall(str(urltitles))
+            # for groups in result:
+            #     matches.append(groups)
+            # # <a href="/bbs/Beauty/M.1596905869.A.571.html">[正妹] 山下智久吃很好？</a>
+            # # href="/bbs/Beauty/M.1596905869.A.571.html">[正妹]
+            # print(matches)
+
+
+            await ctx.send("第"+str(i+1)+"頁的內容:")
+            
+            for urltitle in urltitles:
+                if urltitle.a != None:
+                    if count < wantNum:
+                        if not "[公告]" in (urltitle.a.string):
+                            Link=urltitle.find("a")
+                            await ctx.send(str(count+1)+'.'+str(Link.string))
+                            await ctx.send('https://www.ptt.cc/'+Link['href'])
+                            await asyncio.sleep(0.1) #單位:秒 
+                            # webbrowser.open_new('https://www.ptt.cc/'+Link['href']) 
+                    count = count + 1
+            
+            await ctx.send("==========================================================")
             
             nextLinkTag=root.find("a",string="‹ 上頁")
             nextLink = nextLinkTag['href']
             myUrl = nextLink
-                        
+            url = 'https://www.ptt.cc/' + myUrl           
 
                         # nextLinkCon=urltitle.find("a")
                         # await ctx.send("下一頁的內容:")
@@ -59,7 +70,7 @@ class Myslf(Cog_Extention):
                         # await ctx.send('https://www.ptt.cc/'+nextLinkCon['href'])
                         # await asyncio.sleep(0.1) #單位:秒 
                         # # webbrowser.open_new('https://www.ptt.cc/'+nextLinkCon['href'])     
-            url = 'https://www.ptt.cc/' + myUrl
+            
             # await ctx.send("下一頁的網址:"  + url)
             
             # nextLink=root.find("a",string="‹ 上頁") #找到內文是 ‹ 上頁的a標籤
