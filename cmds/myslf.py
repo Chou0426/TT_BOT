@@ -30,19 +30,7 @@ class Myslf(Cog_Extention):
                 data=response.read().decode("utf-8")
             #解析原始碼，取得每篇文章的標題
             root=bs4.BeautifulSoup(data,"html.parser") #讓BeautifulSoup協助我們解析HTML格式文件
-            titles=root.find_all("a") 
             urltitles = root.find_all("div",class_="title")
-            
-            # matches = []
-            # atReg = re.compile(r'''(class="title">)
-            # <a href=.*?>(.*?)</a>')
-            # result = atReg.findall(str(urltitles))
-            # for groups in result:
-            #     matches.append(groups)
-            # # <a href="/bbs/Beauty/M.1596905869.A.571.html">[正妹] 山下智久吃很好？</a>
-            # # href="/bbs/Beauty/M.1596905869.A.571.html">[正妹]
-            # print(matches)
-
 
             await ctx.send("第"+str(i+1)+"頁的內容:")
             
@@ -64,22 +52,6 @@ class Myslf(Cog_Extention):
             myUrl = nextLink
             url = 'https://www.ptt.cc/' + myUrl           
 
-                        # nextLinkCon=urltitle.find("a")
-                        # await ctx.send("下一頁的內容:")
-                        # await ctx.send(str(nextLinkCon.string))
-                        # await ctx.send('https://www.ptt.cc/'+nextLinkCon['href'])
-                        # await asyncio.sleep(0.1) #單位:秒 
-                        # # webbrowser.open_new('https://www.ptt.cc/'+nextLinkCon['href'])     
-            
-            # await ctx.send("下一頁的網址:"  + url)
-            
-            # nextLink=root.find("a",string="‹ 上頁") #找到內文是 ‹ 上頁的a標籤
-            # return nextLink["href"]
-            # for title in titles:
-            #     if str(title.string).endswith("jpg"):
-            #         await asyncio.sleep(0.1) #單位:秒
-            #         # await ctx.send(nextLink["href"])
-            #         await ctx.send(str(title.string))
             i = i + 1
             count = 0
             
